@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Pre-processing - VHC-TestDataScience-1</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">VHC-TestDataScience-1</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../data-cleaning/" class="nav-link">Data Cleaning</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../data-exploration/" class="nav-link">Data Exploration</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../feature-engineering/" class="nav-link">Feature Engineering</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Pre-processing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../modeling/" class="nav-link">Modeling</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../xgboost/" class="nav-link">XGBoost</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../results/" class="nav-link">Results</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../feature-engineering/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../modeling/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#pre-processing" class="nav-link">Pre-processing</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="pre-processing">Pre-processing</h1>
+<p>Antes de comenzar con el modelado, será necesario hacer unas transformaciones en el conjunto de datos.</p>
+<ul>
+<li><strong>Nueva columna de Fallos</strong></li>
+</ul>
+<p>Crea una nueva columna que contenga todos los tipos de fallos. Esta columna será la variable objetivo y facilitará el modelado y la predicción.</p>
+<pre><code class="language-python"># List of faults and their corresponding values
+fault_mapping = {&quot;Pastry&quot;: 0, &quot;Z_Scratch&quot;: 1, &quot;K_Scratch&quot;: 2, &quot;Stains&quot;: 3, &quot;Dirtiness&quot;: 4, &quot;Bumps&quot;: 5, &quot;Other_Faults&quot;: 6}
+
+# Initialize the Faults column
+defect_detection[&quot;Faults&quot;] = 0
+
+# Loop through each fault and assign the corresponding value
+for fault, value in fault_mapping.items():
+    defect_detection.loc[defect_detection[fault] == 1, &quot;Faults&quot;] = value
+
+# Display the first few rows
+defect_detection.head()
+</code></pre>
+<pre><code class="language-python"># Drop individual fault columns
+defect_detection.drop(faults, axis = 1, inplace=True)
+defect_detection.head()
+</code></pre>
+<ul>
+<li><strong>Dividir los datos</strong></li>
+</ul>
+<p>Al dividir los datos en un conjunto de entrenamiento y uno de prueba, se asegura que el escalado se base únicamente en los datos de entrenamiento, evitando que cualquier información del conjunto de prueba se filtren en el modelo durante el entrenamiento.</p>
+<pre><code class="language-python"># Independent features
+X = defect_detection.drop(&quot;Faults&quot;, axis = 1)
+
+# Dependent or target variable
+y = defect_detection[&quot;Faults&quot;]
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+print(&quot;Training set - X_train shape:&quot;, X_train.shape)
+print(&quot;Testing set - X_test shape:&quot;, X_test.shape)
+print(&quot;Training set - y_train shape:&quot;, y_train.shape)
+print(&quot;Testing set - y_test shape:&quot;, y_test.shape)
+</code></pre>
+<ul>
+<li><strong>Escalado de características</strong></li>
+</ul>
+<p>El método utilizado es el de escalado estándar. </p>
+<pre><code class="language-python"># Initialize the scaler
+scaler = StandardScaler()
+
+# Fit the scaler on the training data and transform it
+X_train_scaled = scaler.fit_transform(X_train)
+
+# Transform the test data using the same scaler
+X_test_scaled = scaler.transform(X_test)
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

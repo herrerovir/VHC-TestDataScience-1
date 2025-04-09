@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Data Exploration - VHC-TestDataScience-1</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">VHC-TestDataScience-1</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../data-cleaning/" class="nav-link">Data Cleaning</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="./" class="nav-link active" aria-current="page">Data Exploration</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../feature-engineering/" class="nav-link">Feature Engineering</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../pre-processing/" class="nav-link">Pre-processing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../modeling/" class="nav-link">Modeling</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../xgboost/" class="nav-link">XGBoost</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../results/" class="nav-link">Results</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../data-cleaning/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../feature-engineering/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#exploratory-data-analysis" class="nav-link">Exploratory Data Analysis</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#target-variable" class="nav-link">Target Variable</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#features" class="nav-link">Features</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#matriz-de-correlacion" class="nav-link">Matriz de correlación</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="exploratory-data-analysis">Exploratory Data Analysis</h1>
+<p>En esta sección, se realiza un análisis exploratorio de datos en profundidad.</p>
+<h2 id="target-variable"><strong>Target Variable</strong></h2>
+<p>El primer paso es examinar la variable objetivo para obtener una visión general de su distribución.</p>
+<p>El objetivo de este proyecto es predecir fallos en las placas de acero. Este conjunto de datos contiene 7 columnas que representan los 7 posibles fallos. Estas 7 columnas son la variable objetivo de este problema.</p>
+<pre><code class="language-python"># Plot distribution of all target columns on the datasest
+fig, ax = plt.subplots(2, 4, figsize = (20, 8))
+ax = ax.flatten()
+for i, col in enumerate(defect_detection.columns[-7:]):
+    sns.histplot(defect_detection[col], ax = ax[i], color = &quot;#74add1&quot;)
+Verifica si hay observaciones sin fallos.
+# List of fault columns
+faults = [&quot;Pastry&quot;, &quot;Z_Scratch&quot;, &quot;K_Scratch&quot;, &quot;Stains&quot;, &quot;Dirtiness&quot;, &quot;Bumps&quot;, &quot;Other_Faults&quot;]
+
+# Get the observations with no faults
+no_faults = defect_detection[defect_detection[faults].sum(axis = 1) == 0]
+
+# Display the results
+if no_faults.empty:
+    print(&quot;There are no observations with no faults.&quot;)
+else:
+    print(&quot;Number of observations with no faults:&quot;)
+    print(no_faults)
+</code></pre>
+<p>De este análisis rápido se puede concluir que no hay observaciones sin fallos. Ahora verifica si hay fallos que ocurren simultáneamente en una misma observación.</p>
+<pre><code class="language-python"># Sum defect values per row
+defect_detection[faults].sum(axis = 1).value_counts()
+</code></pre>
+<p>Se confirma que todas las observaciones contienen solo un tipo de fallo. Por lo tanto, este problema se mantiene como una clasificación multicategórica en lugar de una clasificación multietiqueta. Lo siguiente será echar un vistazlo a la distribución de todos los fallos para tener una visión clara de cuántas observaciones por fallo hay.</p>
+<pre><code class="language-python">sum_faults = defect_detection[faults].sum().sort_values(ascending=True)
+sum_faults
+</code></pre>
+<p>La distribución de tipos de fallos en el acero muestra que el fallo más común es el de <strong>other faults</strong>, seguido por <strong>bumps</strong> y <strong>k_scratch</strong>. El fallo menos frecuente en el conjunto de datos es <strong>dirtiness</strong> (suciedad).</p>
+<p>El conjunto de datos presenta un claro desequilibrio, ya que el número de instancias entre las diferentes clases de fallos varía ampliamente. Durante la etapa de modelado, será necesario abordar este problema. Algunas técnicas utilizadas para manejar conjuntos de datos desequilibrados incluyen: re-muestreo, el uso de algoritmos robustos contra el desequilibrio de clases, o aplicar métricas que consideren la distribución de clases, como el F1-score y la curva de precisión-recall.</p>
+<pre><code class="language-python">fault_types_distribution_graph = plt.figure(figsize = (10, 4))
+ax = sns.barplot(sum_faults, color = &quot;#74add1&quot;)
+for i in ax.containers:
+    ax.bar_label(i,)
+plt.xlabel(&quot;Tipo de defecto&quot;)
+plt.ylabel(&quot;Frecuencia&quot;)
+plt.title(&quot;Distribución de los tipos de defectos en las placas de acero&quot;, size = 12)
+fault_types_distribution_pie = plt.figure(figsize = (11, 5))
+colors = [&quot;#d73027&quot;, &quot;#f46d43&quot;, &quot;#fdae61&quot;, &quot;#fee090&quot;, &quot;#abd9e9&quot;, &quot;#74add1&quot;, &quot;#4575b4&quot;]
+plt.pie(sum_faults, labels = sum_faults.index, startangle = 90, autopct = &quot;%1.0f%%&quot;, shadow = True, colors = colors)
+plt.axis(&quot;equal&quot;)
+plt.legend()
+plt.title(&quot;Distribución de los tipos de defectos en las placas de acero&quot;, pad = 15)
+</code></pre>
+<h2 id="features"><strong>Features</strong></h2>
+<p>El siguiente paso es examinar cada característica del conjunto de datos para obtener una visión general de sus distribuciones. Dado que todas están en diferentes escalas, será necesario escalar las características en los próximos pasos.</p>
+<p>Los histogramas revelan información valiosa sobre la distribución de las características.</p>
+<ul>
+<li><strong>Distribución normal</strong>: Maximum_of_Luminosity, Empty_Index, Square_Index, Luminosity_Index, Minimum_of_Luminosity y Orientation_Index.</li>
+<li><strong>Distribución sesgada</strong>: Y_Minimum, Y_Maximum, Pixels_Areas, X_Perimeter, Y_Perimeter, Sum_of_Luminosity, Log_Y_Index y Edges_X_Index.</li>
+<li><strong>Distribución uniforme</strong>: X_Minimum, X_Maximum, EdgesIndex, Edges_Y_Index y SigmoidOfAreas.</li>
+</ul>
+<pre><code class="language-python"># Plot distribution of all features on the datasest
+fig, ax = plt.subplots(9, 3, figsize = (18, 32))
+for i, col in enumerate(defect_detection.columns[:27]):
+    sns.histplot(defect_detection[col], ax = ax[i//3][i%3], color = &quot;#74add1&quot;)
+</code></pre>
+<h2 id="matriz-de-correlacion"><strong>Matriz de correlación</strong></h2>
+<pre><code class="language-python">correlations = defect_detection.corr()
+correlations
+correlation_heatmap_graph = plt.figure(figsize = (10, 8))
+sns.heatmap(correlations, linewidths = 0.5, cmap = &quot;RdYlBu&quot;)
+plt.title(&quot;Correlation Heatmap&quot;, size = 12)
+</code></pre>
+<p>La matriz de correlación muestra las relaciones entre variables: el color rojo indica que la relación es negativa, el azul que la relación es positiva y el color amarillo que la relación es baja o nula. Puesto que hay un alto número de características correlacionadas es necesario crear nuevas características a partir de éstas para reducir el número total de características en el dataset y facilitar el modelado.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
