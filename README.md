@@ -13,6 +13,7 @@ Elegí este conjunto de datos por su relevancia en la industria 2.0 y en el cont
 - [Dependencias](#dependencias)
 - [Instalar dependencias](#instalar)
 - [Como ejecutar el projecto](#como-ejecutar-el-proyecto)
+- [Documentacion](#documentación)
 - [Dataset](#dataset)
 - [Modelado](#modelado)
 - [Resultados](#resultados)
@@ -26,6 +27,16 @@ VHC-TestDataScience-1/
 │   ├── raw/                            # Datos originales
 │   ├── processed/                      # Datos limpios
 │   └── feature-engineering/            # Datos limpios después de feature engineering
+
+├── docs/                               # Documentacion
+|   ├── data-cleaning.md                # Limpieza
+|   ├── data-exploration                # Exploracion
+│   ├── feature-engineering.md          # Feature engineering
+|   ├── index.md                        # Indice
+|   ├── modeling.md                     # Modelado
+|   ├── pre-processing.md               # Preprocesamiento
+|   ├── results.md                      # Resultados
+|   ├── xgboost.md                      # Modelado xgboost
 │
 ├── models/                             # Modelos entrenados
 │   ├── xgboost_model.json              # Modelo guardado en formato json
@@ -90,6 +101,10 @@ pip install -r requirements.txt
 3. Abre el notebook:
    ```{shell}
    jupyter notebook
+
+## Documentacion
+
+Toda la documentación del proyecto en mkdocs se encuentra alojada en la siguiente dirección [documentación](https://herrerovir.github.io/VHC-TestDataScience-1/)
 
 ## Dataset
 
